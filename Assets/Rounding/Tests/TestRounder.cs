@@ -44,35 +44,35 @@ namespace UnitTest.Rounding
 
             round.move = new Vector2(2, 1);
             round.orgion = new Vector2();
-            round.Update();
+            Update();
             Assert.AreEqual(2, round.points.Count);
             AssertEx.AreEqualVec2(new Vector2(0, 0), round.points[0]);
             AssertEx.AreEqualVec2(new Vector2(1, 0), round.points[1]);
 
             round.move = new Vector2(2, -0.1f);
-            round.Update();
+            Update();
             Assert.AreEqual(1, round.points.Count);
             AssertEx.AreEqualVec2(new Vector2(0, 0), round.points[0]);
 
             round.move = new Vector2(2, 1);
-            round.Update();
+            Update();
             round.move = new Vector2(0.5f, 2);
-            round.Update();
+            Update();
             Assert.AreEqual(3, round.points.Count);
             AssertEx.AreEqualVec2(new Vector2(0, 0), round.points[0]);
             AssertEx.AreEqualVec2(new Vector2(1, 0), round.points[1]);
             AssertEx.AreEqualVec2(new Vector2(1, 1), round.points[2]);
 
             round.move = new Vector2(2, 1);
-            round.Update();
+            Update();
             Assert.AreEqual(2, round.points.Count);
             AssertEx.AreEqualVec2(new Vector2(0, 0), round.points[0]);
             AssertEx.AreEqualVec2(new Vector2(1, 0), round.points[1]);
 
             round.move = new Vector2(0.5f, 2);
-            round.Update();
+            Update(); ;
             round.move = new Vector2(-1, 0.5f);
-            round.Update();
+            Update();
             Assert.AreEqual(4, round.points.Count);
             AssertEx.AreEqualVec2(new Vector2(0, 0), round.points[0]);
             AssertEx.AreEqualVec2(new Vector2(1, 0), round.points[1]);
@@ -80,13 +80,13 @@ namespace UnitTest.Rounding
             AssertEx.AreEqualVec2(new Vector2(0, 1), round.points[3]);
 
             round.move = new Vector2(0.5f, 2);
-            round.Update();
+            Update();
             Assert.AreEqual(3, round.points.Count);
 
             round.move = new Vector2(-1, 0.5f);
-            round.Update();
+            Update();
             round.move = new Vector2(0.5f, -0.5f);
-            round.Update();
+            Update();
             Assert.AreEqual(5, round.points.Count);
             AssertEx.AreEqualVec2(new Vector2(0, 0), round.points[0]);
             AssertEx.AreEqualVec2(new Vector2(1, 0), round.points[1]);
@@ -95,9 +95,18 @@ namespace UnitTest.Rounding
             AssertEx.AreEqualVec2(new Vector2(0, 0), round.points[4]);
 
             round.move = new Vector2(-1, 0.5f);
-            round.Update();
+            Update();
             Assert.AreEqual(4, round.points.Count);
         }
+
+        private void Update()
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                round.Update();
+            }
+        }
+
         [Test]
         public void testBoxInner()
         {
@@ -109,6 +118,30 @@ namespace UnitTest.Rounding
             Assert.AreEqual(1, round.points.Count);
             AssertEx.AreEqualVec2(new Vector2(0, 0), round.points[0]);
 
+        }
+        [Test]
+        public void testBoxSize()
+        {
+            round.obstacle.Add(new Box(2, 1, new Vector2(1, 0.5f)));
+            round.orgion = new Vector2();
+
+            round.move = new Vector2(2.1f, 0.1f);
+            round.Update();
+            Assert.AreEqual(2, round.points.Count);
+            AssertEx.AreEqualVec2(new Vector2(0, 0), round.points[0]);
+            AssertEx.AreEqualVec2(new Vector2(2, 0), round.points[1]);
+            round.move = new Vector2(2.1f, -0.1f);
+            round.Update();
+            Assert.AreEqual(1, round.points.Count);
+            round.move = new Vector2(1.9f, 0.1f);
+            round.Update();
+            Assert.AreEqual(1, round.points.Count);
+
+            round.move = new Vector2(2, 0f);
+            round.Update();
+            round.move = new Vector2(2, 1f);
+            round.Update();
+            Assert.AreEqual(3, round.points.Count);
         }
         [Test]
         public void testGetPoints()
