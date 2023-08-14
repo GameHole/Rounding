@@ -12,8 +12,6 @@ namespace Rounding
         public List<Vector2> points { get; private set; } = new List<Vector2>();
         public List<Box> obstacle { get; private set; } = new List<Box>();
         private List<Vector2> _points = new List<Vector2>();
-        private int preIndex=-1;
-
         public Rounder()
         {
             Clear();
@@ -34,18 +32,22 @@ namespace Rounding
 
         private void AddBoxPoints(Box box)
         {
-            var state = box.isRound(move, points[Index], out var p);
-            if (state==add)
+            int last = lastIndex;
+            int preLast = last - 1;
+            if (box.isRound(move, points[last], out var p))
             {
                 points.Add(p);
             }
-            else if(state==remove)
+            else
             {
-                points.RemoveAt(Index);
+                if (preLast >= 0 && !box.isRound(move, points[preLast], out p))
+                {
+                    points.RemoveAt(lastIndex);
+                }
             }
         }
 
-        private int Index => points.Count - 1;
+        private int lastIndex => points.Count - 1;
 
         public List<Vector2> GetPoints()
         {

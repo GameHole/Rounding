@@ -30,41 +30,58 @@ namespace Rounding
         private Vector2[] points;
         public bool isRound(Vector2 move, Vector2 lastPoint, out Vector2 p)
         {
+            p = default;
             var line = move - lastPoint;
-            if (TryGetBoxPoint(lastPoint, out p, out var pre))
-            {
-                return isRoundSide(line, p - pre);
-            }
-            for (int i = 0; i < points.Length; i++)
-            {
-                p = points[i];
-                if(Vector3.Dot(line,p - lastPoint) <= 0)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-        bool TryGetBoxPoint(Vector2 lastPoint, out Vector2 p, out Vector2 pre)
-        {
+            Vector2 pre;
             for (int i = 0; i < points.Length; i++)
             {
                 pre = points[i];
                 if (lastPoint == pre)
                 {
-                    p = points[(i + 1) % dirs.Length];
+                    p = points[getCycleIndex(i + 1)];
+                    var side = p - pre;
+                    if (isOnLeft(line, side))
+                        return true;
+                    p = points[getCycleIndex(i - 1)];
+                    side = p - pre;
+                    if (isOnRight(line,side))
+                        return true;
+                    return false;
+                }
+            }
+            for (int i = 0; i < points.Length; i++)
+            {
+                p = points[i];
+                var side = p - lastPoint;
+                if (isOnLeft(line, side))
+                {
                     return true;
                 }
             }
-            p = pre = default;
             return false;
         }
-        private bool isRoundSide(Vector2 line, Vector2 side)
+
+        private int getCycleIndex(int i)
         {
-            return Vector2.Dot(line, side.normalized) >= side.magnitude
-                && Vector3.Cross(line, side).z <= 0;
+            if (i >= dirs.Length)
+                return i - 4;
+            if (i < 0)
+                return 4 + i;
+            return i;
         }
 
+        private bool isOnLeft(Vector2 line, Vector2 side)
+        {
+            float dot = Vector2.Dot(line, side.normalized);
+            float cross = Vector3.Cross(line, side).z;
+            return dot >= side.magnitude && cross <= 0;
+        }
+        private bool isOnRight(Vector2 line, Vector2 side)
+        {
+            float dot = Vector2.Dot(line, side.normalized);
+            float cross = Vector3.Cross(line, side).z;
+            return dot >= side.magnitude && cross >= 0;
+        }
         private Vector2 GetPoint(Vector2 dir)
         {
             return center + new Vector2(w, h) * 0.5f * dir;

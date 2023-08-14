@@ -25,6 +25,14 @@ namespace UnitTest.Rounding
             Assert.IsTrue(box.isRound(new Vector2(2, 0f), new Vector2(), out var p));
         }
         [Test]
+        public void testPointsInverse()
+        {
+            AssertIsRound(new Vector2(0.5f, 2), new Vector2(), new Vector2(0, 1));
+            AssertIsRound(new Vector2(2, 0.5f), new Vector2(0,1), new Vector2(1, 1));
+            AssertIsRound(new Vector2(0.5f, -0.5f), new Vector2(1,1), new Vector2(1, 0));
+            AssertIsRound(new Vector2(-1, 0.5f), new Vector2(1,0), new Vector2(0, 0));
+        }
+        [Test]
         public void testNotRound()
         {
             Assert.IsFalse(box.isRound(new Vector2(2, -0.001f), new Vector2(), out var p));
@@ -47,6 +55,9 @@ namespace UnitTest.Rounding
         public void testStartPointIsNotOnBox()
         {
             AssertIsRound(new Vector2(2, 1f), new Vector2(-1, -1), new Vector2(1, 0));
+            AssertIsRound(new Vector2(0, 2), new Vector2(2, 0), new Vector2(1, 1));
+            AssertIsRound(new Vector2(2, 2f), new Vector2(-1, -1), new Vector2(1, 0));
+            AssertIsRound(new Vector2(1+0.1f,0+0.1f), new Vector2(1-0.1f, 0-0.1f), new Vector2(1, 0));
         }
     }
 }
