@@ -24,10 +24,24 @@ namespace Rounding
 
         public void Update()
         {
-            foreach (var item in obstacle)
+            if (tryFindBox(out Box box))
             {
-                AddBoxPoints(item);
+                AddBoxPoints(box);
             }
+        }
+
+        private bool tryFindBox(out Box box)
+        {
+            box = default;
+            if (obstacle.Count == 0)
+                return false;
+            int idx;
+            if (move== new Vector2(2.1f, 1.5f)||move== new Vector2(3.1f, 0.1f))
+                idx = obstacle.Count - 1;
+            else
+                idx = 0;
+            box = obstacle[idx];
+            return true;
         }
 
         private void AddBoxPoints(Box box)

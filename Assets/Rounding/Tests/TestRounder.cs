@@ -207,7 +207,13 @@ namespace UnitTest.Rounding
             round.obstacle.Add(new Box(1, 1, new Vector2(2, 0.5f)));
             round.move = new Vector2(3.1f, 0.1f);
             round.Update();
-            AssertPoints(new Vector2(), new Vector2(2, 0));
+            AssertPoints(new Vector2(), new Vector2(2.5f, 0));
+            round.move = new Vector2(2.1f, 1.5f);
+            round.Update();
+            AssertPoints(new Vector2(), new Vector2(2.5f, 0), new Vector2(2.5f, 1));
+            round.move = new Vector2(-0.5f, 0.5f);
+            round.Update();
+            AssertPoints(new Vector2(), new Vector2(2.5f, 0), new Vector2(2.5f, 1),new Vector2(0,1));
         }
     }
 }
